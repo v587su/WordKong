@@ -68,7 +68,7 @@
     left: 30%;
     top: 20%;
     height: 50%;
-    width: 40%;
+    max-width: 40%;
     min-width: 215px;
     z-index: 12345;
     background-color: #d6f292;
@@ -78,7 +78,22 @@
     font-size: 14px;
     color: #776e65;
     padding: 30px 30px 40px 30px;
+}
+.history-table-container {
     overflow-y: scroll;
+    border: 1px green solid;
+    height: 100%;
+}
+.history-table {
+    background-color: #fff;
+    color: green;
+}
+.history-table-header {
+    text-align: center;
+    font-size: 12px;
+}
+.history-table > tr > td {
+    min-width: 60px
 }
 
 .popup-container {

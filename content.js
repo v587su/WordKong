@@ -152,24 +152,29 @@
       class: ['history-container'],
       id: 'history-container',
       children: [{
-        type: 'table',
-        name: 'history-table',
-        class: ['history-table'],
-        id: 'history-table',
-        columns: [{
-          text: '单词',
-          headRender: (text) => (text),
-          cellRender: (text) => (text)
-        },{
-          text: '释义',
-          headRender: (text) => (text),
-          cellRender: (text) => (text)
-        },{
-          text: '状态',
-          headRender: (text) => (text),
-          cellRender: (text) => (text)
-        }],
-        tableContent: setting.history
+        type: 'div',
+        name: 'history-table-container',
+        class: ['history-table-container'],
+        children: [{
+          type: 'table',
+          name: 'history-table',
+          class: ['history-table'],
+          id: 'history-table',
+          columns: [{
+            text: '单词',
+            cellRender: (text) => (text)
+          },{
+            text: '释义',
+            cellRender: (text) => (text)
+          },{
+            text: '状态',
+            cellRender: (text) => (text)
+          }],
+          headRender: (text) => {
+            return `<div class="history-table-header">${text}</div>`
+          },
+          tableContent: setting.history
+        }]
       }]
     }];
     function close() {
@@ -197,7 +202,11 @@
         const tableRow = ele.insertRow(0);
         item.columns.forEach((column, index) => {
           const tableCell = tableRow.insertCell(index);
-          tableCell.innerHTML = column.headRender(column.text);
+          if(item.headRender) {
+            tableCell.innerHTML = item.headRender(column.text);
+          } else {
+            tableCell.innerText = column.text;
+          }
         })
       }
       if(item.tableContent && item.columns) {
@@ -205,7 +214,11 @@
           const tableRow = ele.insertRow(ele.rows.length);
           Object.keys(content).forEach((key, index) => {
             const tableCell = tableRow.insertCell(index);
-            tableCell.innerHTML = item.columns[index].cellRender(content[key]);
+            if(item.columns[index].cellRender) {
+              tableCell.innerHTML = item.columns[index].cellRender(content[key]);
+            } else {
+              tableCell.innerText = content[key];
+            }
           })
         })
       }

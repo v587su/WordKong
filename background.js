@@ -64,9 +64,9 @@ chrome.runtime.onMessage.addListener(
     //修改历史的监听器
     if(message.history) {
       const nextHistory = setting.history;
-      nextHistory.push(message.history);
+      nextHistory.unshift(message.history);
       if(nextHistory.length > 20) {
-        nextHistory.shift();
+        nextHistory.pop();
       }
       chrome.storage.sync.set({wordKong:Object.assign(setting, {history: nextHistory})});
     }
