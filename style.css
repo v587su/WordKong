@@ -1,0 +1,91 @@
+.word-container {
+    position: fixed;
+    left: 40%;
+    top: 30%;
+    width: 20%;
+    min-width: 215px;
+    z-index: 12345;
+    background-color: #d6f292;
+    border: 2px dotted;
+    border-radius: 10px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    color: #776e65;
+    padding: 30px 30px 40px 30px;
+ }
+.word-content {
+    text-align: center;
+    font-size: 40px;
+    margin: 5px 0 10px 0;
+}
+.word-button {
+    clear: both;
+    float: left;
+    border: 1px green solid;
+    border-radius: 5px;
+    background-color: #fff;
+    color: green;
+    height: 28px;
+    width: 100%;
+    min-width: 150px;
+    margin: 10px 0;
+}
+.word-button:hover {
+    color: #003200;
+    border-color: #003200;
+}
+.word-filter {
+    position: fixed;
+    top:0;
+    left:0;
+    z-index: 12344;
+    height: 100%;
+    width: 100%;
+    background-color: black;
+    opacity: 0.6 !important;
+}
+.word-none {
+    display: none;
+}
+.word-definition {
+    font-size: 20px;
+    /*text-align: center;*/
+}
+.word-example-container {
+    margin-top: 15px;
+    border: 1px green solid;
+    border-radius: 5px;
+    background-color: #fff;
+    color: green;
+    padding: 10px;
+}
+.word-unknown-closer {
+    margin: 5px 0;
+}
+
+.history-container {
+    position: fixed;
+    left: 30%;
+    top: 20%;
+    height: 50%;
+    width: 40%;
+    min-width: 215px;
+    z-index: 12345;
+    background-color: #d6f292;
+    border: 2px dotted;
+    border-radius: 10px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    color: #776e65;
+    padding: 30px 30px 40px 30px;
+    overflow-y: scroll;
+}
+
+.popup-container {
+    text-align: center;
+}
+.popup-img {
+    float: left;
+    margin: 10px 0 0 0;
+}
+

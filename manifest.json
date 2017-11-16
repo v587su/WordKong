@@ -1,0 +1,32 @@
+{
+  "manifest_version": 2,
+  "name": "单词控",
+  "version": "0.1.1",
+  "description": "上着上着网突然蹦出个单词让你背！是不是幸福感满满？",
+  "permissions": [
+    "http://*.shanbay.com/*",
+    "contextMenus",
+    "tabs",
+    "storage",
+    "notifications"
+  ],
+  "options_page": "option.html",
+  "background": {
+    "persistent": true,
+    "scripts": [ "utility.js", "SearchDictionary.js", "background.js"]
+  },
+  "browser_action": {
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "48": "asset/icon48.png",
+    "16": "asset/icon16.png"
+  },
+  "content_scripts": [ {
+    "all_frames": true,
+    "css": ["style.css"],
+    "js": ["utility.js", "content.js"],
+    "matches": ["<all_urls>"]
+  } ],
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}
