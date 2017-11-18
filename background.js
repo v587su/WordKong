@@ -22,14 +22,15 @@ function showNotification(note, onClick = function(){}) {
   }
 }
 
-function getWord(index) {
+function getWord(message) {
+  console.log('getWord', message);
+  const index = message === -1 ? setting.current : message;
   const content = wordArray[setting.dicType][index];
   return api.search(content.substring(1)).then(
     function (response) {
       const word = Object.assign({}, response, {
         index: index,
-        showTime: 0,
-        passTime: 0,
+        message: message,  //true 为正常学习单词， false 为只查看单词
       });
       return word;
     }
@@ -53,17 +54,18 @@ chrome.runtime.onMessage.addListener(
     //获取单词的监听器
     const check = sender.url.length < setting.frequency || sender.url.includes('chrome-extension');
     if(message.word > -10 && check) {
-      const noIndex = message.word === -1;
-      getWord(noIndex ? setting.current : message.word).then(function (word) {
+      console.log('run getWord');
+      getWord(message.word).then(function (word) {
         sendResponse(word);
       });
-      if(noIndex) {
+      if(message.word === -1) {
         const nextCurrent = Math.round(Math.random() * wordArray[setting.dicType].length);
         chrome.storage.sync.set({wordKong:Object.assign(setting, {current: nextCurrent})});
       }
     }
     //修改历史的监听器
     if(message.history) {
+      console.log('run setHistory');
       const nextHistory = setting.history;
       nextHistory.unshift(message.history);
       if(nextHistory.length > 20) {

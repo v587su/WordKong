@@ -68,8 +68,7 @@
     left: 30%;
     top: 20%;
     height: 50%;
-    max-width: 40%;
-    min-width: 215px;
+    width: 40%;
     z-index: 12345;
     background-color: #d6f292;
     border: 2px dotted;
@@ -81,6 +80,7 @@
 }
 .history-table-container {
     overflow-y: scroll;
+    background-color: #ffffff;
     border: 1px green solid;
     height: 100%;
 }
@@ -89,9 +89,9 @@
 }
 .history-table-container::-webkit-scrollbar-track {
     background-color: #ffffff;
-    border-right: 0.5px green solid;
-    border-top: 0.5px green solid;
-    border-bottom: 0.5px green solid;
+    /*border-right: 0.5px green solid;*/
+    /*border-top: 0.5px green solid;*/
+    /*border-bottom: 0.5px green solid;*/
 }
 .history-table-container::-webkit-scrollbar-thumb {
     width: 5px;
@@ -101,12 +101,13 @@
 .history-table {
     background-color: #fff;
     color: green;
+    width: 100%;
 }
 .history-table-header {
     text-align: center;
     color: darkgreen;
 }
-div td {
+.history-container td {
     min-width: 60px;
     padding: 2px;
     text-align: center;

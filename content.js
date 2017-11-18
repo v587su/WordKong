@@ -2,7 +2,9 @@
   const makeWordContainer = (word) => {
     const voice = document.createElement('audio');
     voice.proload = 'auto';
-    voice.src = word.audio;
+    if(word.audio) {
+      voice.src = word.audio;
+    }
     const elements = [{
       type: 'div',
       name: 'filter',
@@ -116,13 +118,15 @@
       return ele;
     }
     function addHistory(state) {
-      chrome.runtime.sendMessage({history: {
-        content: word.content,
-        definition: word.definition,
-        state: state,
-        date: new Date().toLocaleString(),
-        index: word.index,
-      }});
+      if(word.message !== word.index) {
+        chrome.runtime.sendMessage({history: {
+          content: word.content,
+          definition: word.definition,
+          state: state,
+          date: new Date().toLocaleString(),
+          index: word.index,
+        }});
+      }
     }
     elements.forEach(item => {
       const ele = attribute(item);
@@ -223,10 +227,10 @@
         })
       }
       if(item.tableContent && item.columns) {
-        item.tableContent.forEach((content, index) => {
+        item.tableContent.forEach((content) => {
           const tableRow = ele.insertRow(ele.rows.length);
           if(item.onRowClick) {
-            tableRow.onclick = () => item.onRowClick(index);
+            tableRow.onclick = () => item.onRowClick(content.index);
           }
           item.columns.forEach((column, index) => {
             const tableCell = tableRow.insertCell(index);
