@@ -84,16 +84,34 @@
     border: 1px green solid;
     height: 100%;
 }
+.history-table-container::-webkit-scrollbar {
+    width: 6px;
+}
+.history-table-container::-webkit-scrollbar-track {
+    background-color: #ffffff;
+    border-right: 0.5px green solid;
+    border-top: 0.5px green solid;
+    border-bottom: 0.5px green solid;
+}
+.history-table-container::-webkit-scrollbar-thumb {
+    width: 5px;
+    border-right: 0.5px green solid;
+    background-color: lightgreen;
+}
 .history-table {
     background-color: #fff;
     color: green;
 }
 .history-table-header {
     text-align: center;
-    font-size: 12px;
+    color: darkgreen;
 }
-.history-table > tr > td {
-    min-width: 60px
+div td {
+    min-width: 60px;
+    padding: 2px;
+    text-align: center;
+    border-right: 1px solid #D6DADC;
+    border-bottom: 1px solid #D6DADC;
 }
 
 .popup-container {

@@ -119,7 +119,9 @@
       chrome.runtime.sendMessage({history: {
         content: word.content,
         definition: word.definition,
-        state: state
+        state: state,
+        date: new Date().toLocaleString(),
+        index: word.index,
       }});
     }
     elements.forEach(item => {
@@ -162,18 +164,29 @@
           id: 'history-table',
           columns: [{
             text: '单词',
-            cellRender: (text) => (text)
+            key: 'content',
+            cellRender: (text) => (`<div>${text}</div>`)
+          },{
+            text: '时间',
+            key: 'date',
+            cellRender: (text) => (`<div>${text}</div>`)
           },{
             text: '释义',
-            cellRender: (text) => (text)
+            key: 'definition',
+            cellRender: (text) => (`<div style="text-align: left;padding-left: 5px">${text}</div>`)
           },{
             text: '状态',
-            cellRender: (text) => (text)
+            key: 'state',
+            cellRender: (text) => (`<div>${text}</div>`)
           }],
           headRender: (text) => {
             return `<div class="history-table-header">${text}</div>`
           },
-          tableContent: setting.history
+          tableContent: setting.history,
+          onRowClick: (index) => {
+            close();
+            sendMessage(index)
+          }
         }]
       }]
     }];
@@ -212,12 +225,15 @@
       if(item.tableContent && item.columns) {
         item.tableContent.forEach((content, index) => {
           const tableRow = ele.insertRow(ele.rows.length);
-          Object.keys(content).forEach((key, index) => {
+          if(item.onRowClick) {
+            tableRow.onclick = () => item.onRowClick(index);
+          }
+          item.columns.forEach((column, index) => {
             const tableCell = tableRow.insertCell(index);
-            if(item.columns[index].cellRender) {
-              tableCell.innerHTML = item.columns[index].cellRender(content[key]);
+            if(column.cellRender) {
+              tableCell.innerHTML = column.cellRender(content[column.key]);
             } else {
-              tableCell.innerText = content[key];
+              tableCell.innerText = content[column.key];
             }
           })
         })
@@ -239,12 +255,15 @@
       document.documentElement.appendChild(ele);
     });
   };
-  chrome.runtime.sendMessage({
-    word: true
-  },(response) => {
-    console.log('response word', response);
-    makeWordContainer(response);
-  });
+  const sendMessage = (index = -1) =>{
+    chrome.runtime.sendMessage({
+      word: index
+    },(response) => {
+      console.log('response word', response);
+      makeWordContainer(response);
+    });
+  };
+  sendMessage();
   chrome.runtime.onMessage.addListener(
     (message, sender, sendResponse) => {
       console.log("script on message", message, sender, sendResponse);

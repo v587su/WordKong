@@ -23,7 +23,6 @@ function showNotification(note, onClick = function(){}) {
 }
 
 function getWord(index) {
-  console.log(index);
   const content = wordArray[setting.dicType][index];
   return api.search(content.substring(1)).then(
     function (response) {
@@ -32,7 +31,6 @@ function getWord(index) {
         showTime: 0,
         passTime: 0,
       });
-      console.log('word', word);
       return word;
     }
   );
@@ -54,12 +52,15 @@ chrome.runtime.onMessage.addListener(
     console.log("on message", message, sender);
     //获取单词的监听器
     const check = sender.url.length < setting.frequency || sender.url.includes('chrome-extension');
-    if(message.word && check) {
-      getWord(setting.current).then(function (word) {
+    if(message.word > -10 && check) {
+      const noIndex = message.word === -1;
+      getWord(noIndex ? setting.current : message.word).then(function (word) {
         sendResponse(word);
       });
-      const nextCurrent = Math.round(Math.random() * wordArray[setting.dicType].length);
-      chrome.storage.sync.set({wordKong:Object.assign(setting, {current: nextCurrent})});
+      if(noIndex) {
+        const nextCurrent = Math.round(Math.random() * wordArray[setting.dicType].length);
+        chrome.storage.sync.set({wordKong:Object.assign(setting, {current: nextCurrent})});
+      }
     }
     //修改历史的监听器
     if(message.history) {
