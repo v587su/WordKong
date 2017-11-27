@@ -3,7 +3,8 @@ const defaultSetting = {
   dicType: 'CET6', //词库类型
   autoAudio: 0, //自动发音
   current: 0, //当前单词
-  history: [] //单词背诵历史
+  history: [], //单词背诵历史
+  version: '0.2.1' //单词控版本
 };
 const setting = defaultSetting;
 chrome.storage.sync.get('wordKong', function(items) {

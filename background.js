@@ -5,7 +5,6 @@ function showNotification(note, onClick = function(){}) {
     console.log('no Notification');
     return;
   }
-  console.log(Notification.permission);
   let permission = Notification.permission;
   if (permission === 'granted') {
     const notification = new Notification(
@@ -78,4 +77,21 @@ chrome.runtime.onMessage.addListener(
 );
 
 
+promiseAjax('get', 'http://123.207.243.143:3000/version').then(response => {
+  if(response.version) {
+    if(response.version !== setting.version) {
+      showNotification({
+        title: '单词控有新的更新啦~',
+        content: `单词控最新的版本是${response.version}，而你的是${setting.version}。快快点我更新，看看又加了什么炒鸡酷炫的功能！_(:з」∠)_`
+      }, () => {
+        const method = confirm('这里有两种下载方式：第一种是直接下载crx格式插件，但chrome对插件的来源要求比较严格，可能会出现插件失效的情况；第二种就是科学上网到chrome的插件商店下载（没错，单词控在chrome商店上线了）。总之！想直接下载请点确定，科学上网的同学点取消！');
+        if(method) {
+          window.open('http://123.207.243.143:3000/download');
+        } else {
+          window.open('https://chrome.google.com/webstore/detail/%E5%8D%95%E8%AF%8D%E6%8E%A7/nijnjokmkipjmpaplbkkimkfhggeleci?hl=zh-CN');
+        }
+      })
+    }
+  }
+});
 
