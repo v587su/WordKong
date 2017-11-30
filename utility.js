@@ -7,21 +7,6 @@ const defaultSetting = {
   version: '0.2.1' //单词控版本
 };
 const setting = defaultSetting;
-chrome.storage.sync.get('wordKong', function(items) {
-  console.log(items);
-  if(items) {
-    Object.assign(setting, items.wordKong);
-  } else {
-    chrome.storage.sync.set({wordKong:setting});
-  }
-});
-
-chrome.storage.onChanged.addListener(function (changes) {
-  if(changes.wordKong.newValue) {
-    Object.assign(setting, changes.wordKong.newValue);
-  }
-  console.log(setting);
-});
 
 function promiseAjax(method, url, data) {
   const promise = new Promise(function (resolve, reject) {
@@ -73,3 +58,37 @@ function Shanbei(){
   }
 }
 
+function showNotification(note, onClick = function(){}) {
+  if (!Notification) {
+    console.log('no Notification');
+    return;
+  }
+  let permission = Notification.permission;
+  if (permission === 'granted') {
+    const notification = new Notification(
+      note.title || "单词控",
+      {
+        body: note.content,
+        icon: note.icon || chrome.extension.getURL("asset/pic3.jpg")
+      }
+    );
+    notification.onclick = () => onClick(note.word);
+  } else {
+    Notification.requestPermission();
+    showNotification(note, onClick);
+  }
+}
+
+function getWord(message) {
+  console.log('getWord', message);
+  const index = message === -1 ? setting.current : message;
+  const content = wordArray[setting.dicType][index];
+  return api.search(content.substring(1)).then(
+    function (response) {
+      return Object.assign({}, response, {
+        index: index,
+        message: message,  //true 为正常学习单词， false 为只查看单词
+      });
+    }
+  );
+}

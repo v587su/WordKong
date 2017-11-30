@@ -1,40 +1,20 @@
 const api = new Shanbei();
 
-function showNotification(note, onClick = function(){}) {
-  if (!Notification) {
-    console.log('no Notification');
-    return;
-  }
-  let permission = Notification.permission;
-  if (permission === 'granted') {
-    const notification = new Notification(
-      note.title || "单词控",
-      {
-        body: note.content,
-        icon: note.icon || chrome.extension.getURL("asset/pic3.jpg")
-      }
-    );
-    notification.onclick = () => onClick(note.word);
+chrome.storage.sync.get('wordKong', function(items) {
+  console.log(items);
+  if(items.version === defaultSetting.version) {
+    Object.assign(setting, items.wordKong);
   } else {
-    Notification.requestPermission();
-    showNotification(note, onClick);
+    chrome.storage.sync.set({wordKong:setting});
   }
-}
+});
 
-function getWord(message) {
-  console.log('getWord', message);
-  const index = message === -1 ? setting.current : message;
-  const content = wordArray[setting.dicType][index];
-  return api.search(content.substring(1)).then(
-    function (response) {
-      const word = Object.assign({}, response, {
-        index: index,
-        message: message,  //true 为正常学习单词， false 为只查看单词
-      });
-      return word;
-    }
-  );
-}
+chrome.storage.onChanged.addListener(function (changes) {
+  if(changes.wordKong.newValue) {
+    Object.assign(setting, changes.wordKong.newValue);
+  }
+  console.log(setting);
+});
 
 chrome.runtime.onInstalled.addListener(
   function () {
