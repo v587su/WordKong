@@ -1,32 +1,23 @@
 const api = new Shanbei();
 
-chrome.storage.sync.get('wordKong', function(items) {
-  console.log(items);
-  if(items.version === defaultSetting.version) {
-    Object.assign(setting, items.wordKong);
-  } else {
-    chrome.storage.sync.set({wordKong:setting});
-  }
-});
-
-chrome.storage.onChanged.addListener(function (changes) {
-  if(changes.wordKong.newValue) {
-    Object.assign(setting, changes.wordKong.newValue);
-  }
-  console.log(setting);
-});
-
+//初次安装或更新
 chrome.runtime.onInstalled.addListener(
-  function () {
-    console.log("installed");
-    showNotification({
-      title: '欢迎使用单词控！',
-      content: '这是一个用较为诡异的方式督促你背单词的拓展！目前默认的词库是英语六级, 不要忘了去设置一下你想背的词库哟！ヾ(o◕∀◕)ﾉ'
-    });
+  function (details) {
+    if(details.reason === 'install') {
+      showNotification({
+        title: text.installWelcomeTitle,
+        content: text.installWelcomeContent
+      });
+    } else if (details.reason === 'update') {
+      showNotification({
+        title: text.updateWelcomeTitle,
+        content: text.updateWelcomeContent
+      });
+    }
   }
 );
 
-
+//监听器
 chrome.runtime.onMessage.addListener(
   (message, sender,  sendResponse) => {
     console.log("on message", message, sender);
@@ -56,19 +47,19 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
-
-promiseAjax('get', 'http://123.207.243.143:3000/version').then(response => {
+//版本检查
+promiseAjax('get', url.version).then(response => {
   if(response.version) {
     if(response.version !== setting.version) {
       showNotification({
         title: '单词控有新的更新啦~',
         content: `单词控最新的版本是${response.version}，而你的是${setting.version}。快快点我更新，看看又加了什么炒鸡酷炫的功能！_(:з」∠)_`
       }, () => {
-        const method = confirm('这里有两种下载方式：第一种是直接下载crx格式插件，但chrome对插件的来源要求比较严格，可能会出现插件失效的情况；第二种就是科学上网到chrome的插件商店下载（没错，单词控在chrome商店上线了）。总之！想直接下载请点确定，科学上网的同学点取消！');
+        const method = confirm(text.updateConfirm);
         if(method) {
-          window.open('http://123.207.243.143:3000/download');
+          window.open(url.download);
         } else {
-          window.open('https://chrome.google.com/webstore/detail/%E5%8D%95%E8%AF%8D%E6%8E%A7/nijnjokmkipjmpaplbkkimkfhggeleci?hl=zh-CN');
+          window.open(url.chromeStore);
         }
       })
     }

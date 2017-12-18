@@ -6,7 +6,42 @@ const defaultSetting = {
   history: [], //单词背诵历史
   version: '0.2.1' //单词控版本
 };
+
+const text = {
+  installWelcomeTitle: '欢迎使用单词控！',
+  installWelcomeContent: '这是一个用较为诡异的方式督促你背单词的拓展！目前默认的词库是英语六级, 不要忘了去设置一下你想背的词库哟！ヾ(o◕∀◕)ﾉ',
+  updateWelcomeTitle: '单词控更新啦！',
+  updateWelcomeContent: '本次更新的内容有：巴拉巴拉',
+  updateConfirm: '这里有两种下载方式：第一种是直接下载crx格式插件，但chrome对插件的来源要求比较严格，可能会出现插件失效的情况；第二种就是科学上网到chrome的插件商店下载（没错，单词控在chrome商店上线了）。总之！想直接下载请点确定，科学上网的同学点取消！',
+};
+
+const url = {
+  version: 'http://123.207.243.143:3000/version',
+  download: 'http://123.207.243.143:3000/download',
+  chromeStore: 'https://chrome.google.com/webstore/detail/%E5%8D%95%E8%AF%8D%E6%8E%A7/nijnjokmkipjmpaplbkkimkfhggeleci?hl=zh-CN'
+};
+
 const setting = defaultSetting;
+
+//载入储存内容
+chrome.storage.sync.get('wordKong', function(items) {
+  console.log(items);
+  if(items.version) {
+    if(items.version === defaultSetting.version) {
+      Object.assign(setting, items.wordKong);
+    }
+  } else {
+    chrome.storage.sync.set({wordKong:setting});
+  }
+});
+
+//监听储存变化
+chrome.storage.onChanged.addListener(function (changes) {
+  if(changes.wordKong.newValue) {
+    Object.assign(setting, changes.wordKong.newValue);
+  }
+  console.log(setting);
+});
 
 function promiseAjax(method, url, data) {
   const promise = new Promise(function (resolve, reject) {

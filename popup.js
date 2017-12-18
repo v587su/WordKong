@@ -1,6 +1,6 @@
 function showWordContainer() {
   chrome.runtime.sendMessage({
-    word: true
+    word: -1
   },(response) => {
     console.log('getword', response);
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -13,7 +13,10 @@ function showHistoryContainer() {
     chrome.tabs.sendMessage(tabs[0].id, {history: true});
   });
 }
-console.log('test');
+function openOptionsPage() {
+  chrome.runtime.openOptionsPage();
+}
 document.getElementById('word-still-learning').addEventListener('click', showWordContainer);
 document.getElementById('word-show-history').addEventListener('click', showHistoryContainer);
-document.getElementById('word-kong-version').innerText = 'Version:' + defaultSetting.version;
+document.getElementById('word-show-option').addEventListener('click', openOptionsPage);
+document.getElementById('word-kong-version').innerHTML = 'Version:' + defaultSetting.version;

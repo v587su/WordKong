@@ -280,4 +280,5 @@
       return true;
     }
   )
+  console.log(setting);
 })();
