@@ -26,12 +26,14 @@ const setting = defaultSetting;
 //载入储存内容
 chrome.storage.sync.get('wordKong', function(items) {
   console.log(items);
-  if(items.version) {
-    if(items.version === defaultSetting.version) {
+  if(items.wordKong.version) {
+    if(items.wordKong.version === defaultSetting.version) {
       Object.assign(setting, items.wordKong);
+      console.log('载入后',setting);
     }
-  } else {
+  } else if(!items.wordKong) {
     chrome.storage.sync.set({wordKong:setting});
+    console.log('初始化',setting);
   }
 });
 
@@ -122,7 +124,8 @@ function getWord(message) {
     function (response) {
       return Object.assign({}, response, {
         index: index,
-        message: message,  //true 为正常学习单词， false 为只查看单词
+        dicType: setting.dicType,
+        message: message,  // -1 为正常学习单词， >0 为只查看对应单词
       });
     }
   );

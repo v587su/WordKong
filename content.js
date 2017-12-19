@@ -123,6 +123,7 @@
           content: word.content,
           definition: word.definition,
           state: state,
+          dicType: word.dicType,
           date: new Date().toLocaleString(),
           index: word.index,
         }});
@@ -271,14 +272,14 @@
   chrome.runtime.onMessage.addListener(
     (message, sender, sendResponse) => {
       console.log("script on message", message, sender, sendResponse);
-      if(message.show) {
-        makeWordContainer(message.show)
+      if(message.popup) {
+        makeWordContainer(message.popup)
       }
       if(message.history) {
         makeHistoryContianer()
       }
       return true;
     }
-  )
+  );
   console.log(setting);
 })();
