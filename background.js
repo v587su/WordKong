@@ -35,12 +35,13 @@ chrome.runtime.onMessage.addListener(
     }
     //修改历史的监听器
     if(message.history) {
-      console.log('run setHistory');
       const nextHistory = setting.history;
+      const nextAnalysis = setting.analysis;
       nextHistory.unshift(message.history);
       if(nextHistory.length > 20) {
         nextHistory.pop();
       }
+      nextAnalysis[message.history.dicType] =
       chrome.storage.sync.set({wordKong:Object.assign(setting, {history: nextHistory})});
     }
     return true;

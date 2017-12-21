@@ -1,10 +1,11 @@
 const defaultSetting = {
   frequency: 25,  //弹窗频率
-  dicType: 'CET6', //词库类型
+  dicType: 'CET6', //词库类型 CET6\CET4\NETEM
   autoAudio: 0, //自动发音
   current: 0, //当前单词
   history: [], //单词背诵历史
-  version: '0.2.1' //单词控版本
+  version: '0.2.1', //单词控版本
+  analysis: {}, //数据分析
 };
 
 const text = {
@@ -23,7 +24,7 @@ const url = {
 
 const setting = defaultSetting;
 
-//载入储存内容
+//载入储存内容setting
 chrome.storage.sync.get('wordKong', function(items) {
   console.log(items);
   if(items.wordKong.version) {
