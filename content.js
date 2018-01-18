@@ -1,10 +1,84 @@
 (function () {
-  const makeWordContainer = (word) => {
-    const voice = document.createElement('audio');
-    voice.proload = 'auto';
-    if(word.audio) {
-      voice.src = word.audio;
+  const attribute = (item) => {
+    const ele = document.createElement(item.type);
+    if(item.class) {
+      item.class.forEach(name => {
+        ele.classList.add(name);
+      })
     }
+    if(item.content) {
+      ele.innerText = item.content;
+    }
+    if(item.onclick) {
+      ele.onclick = item.onclick;
+    }
+    if(item.id) {
+      ele.id = item.id;
+    }
+    if(item.columns) {
+      const tableRow = ele.insertRow(0);
+      item.columns.forEach((column, index) => {
+        const tableCell = tableRow.insertCell(index);
+        if(item.headRender) {
+          tableCell.innerHTML = item.headRender(column.text);
+        } else {
+          tableCell.innerText = column.text;
+        }
+      })
+    }
+    if(item.tableContent && item.columns) {
+      item.tableContent.forEach((content) => {
+        const tableRow = ele.insertRow(ele.rows.length);
+        if(item.onRowClick) {
+          tableRow.onclick = () => item.onRowClick(content.index);
+        }
+        item.columns.forEach((column, index) => {
+          const tableCell = tableRow.insertCell(index);
+          if(column.cellRender) {
+            tableCell.innerHTML = column.cellRender(content[column.key]);
+          } else {
+            tableCell.innerText = content[column.key];
+          }
+        })
+      })
+    }
+    return ele;
+  };
+  const append = (elements) => {
+    elements.forEach(item => {
+      const ele = attribute(item);
+      function checkChildren(father, object) {
+        if(object.children){
+          object.children.forEach(childItem => {
+            const child = attribute(childItem);
+            father.appendChild(child);
+            checkChildren(child, childItem);
+          });
+        }
+      }
+      checkChildren(ele, item);
+      document.documentElement.appendChild(ele);
+    });
+  };
+  const close = (elements) => {
+    elements.forEach(item => {
+      document.documentElement.removeChild(document.getElementById(item.id));
+    });
+  };
+  // 以上函数为make...container函数会用到的重复操作
+  const makeWordContainer = (word) => {
+    const addHistory = (state) => {
+      if(word.message !== word.index) {
+        chrome.runtime.sendMessage({history: {
+          content: word.content,
+          definition: word.definition,
+          state: state,
+          dicType: word.dicType,
+          date: new Date().toLocaleString(),
+          index: word.index,
+        }});
+      }
+    };
     const elements = [{
       type: 'div',
       name: 'filter',
@@ -12,7 +86,7 @@
       id: 'word-filter',
       onclick() {
         addHistory('跳过');
-        close();
+        close(elements);
       }
     },{
       type: 'div',
@@ -31,7 +105,7 @@
         content: '我认识',
         onclick(){
           addHistory('认识');
-          close();
+          close(elements);
         }
       },{
         type: 'button',
@@ -90,68 +164,25 @@
         content: '我学到了!',
         class: ['word-button'],
         onclick() {
-          close();
+          close(elements);
         }
       }]
     }];
-    function close() {
-      elements.forEach(item => {
-        document.documentElement.removeChild(document.getElementById(item.id));
-      })
+    const voice = document.createElement('audio');
+    voice.proload = 'auto';
+    if(word.audio) {
+      voice.src = word.audio;
     }
-    function attribute(item) {
-      const ele = document.createElement(item.type);
-      if(item.class) {
-        item.class.forEach(name => {
-          ele.classList.add(name);
-        })
-      }
-      if(item.content) {
-        ele.innerText = item.content;
-      }
-      if(item.onclick) {
-        ele.onclick = item.onclick;
-      }
-      if(item.id) {
-        ele.id = item.id;
-      }
-      return ele;
-    }
-    function addHistory(state) {
-      if(word.message !== word.index) {
-        chrome.runtime.sendMessage({history: {
-          content: word.content,
-          definition: word.definition,
-          state: state,
-          dicType: word.dicType,
-          date: new Date().toLocaleString(),
-          index: word.index,
-        }});
-      }
-    }
-    elements.forEach(item => {
-      const ele = attribute(item);
-      function checkChildren(father, object) {
-        if(object.children){
-          object.children.forEach(childItem => {
-            const child = attribute(childItem);
-            father.appendChild(child);
-            checkChildren(child, childItem);
-          });
-        }
-      }
-      checkChildren(ele, item);
-      document.documentElement.appendChild(ele);
-    });
+    append(elements);
   };
-  const makeHistoryContianer = () => {
+  const makeHistoryContainer = () => {
     const elements = [{
       type: 'div',
       name: 'filter',
       class: ['word-filter'],
       id: 'word-filter',
       onclick() {
-        close();
+        close(elements);
       }
     },{
       type: 'div',
@@ -189,76 +220,89 @@
           },
           tableContent: setting.history,
           onRowClick: (index) => {
-            close();
+            close(elements);
             sendMessage(index)
           }
         }]
       }]
     }];
-    function close() {
-      elements.forEach(item => {
-        document.documentElement.removeChild(document.getElementById(item.id));
-      });
-    }
-    function attribute(item) {
-      const ele = document.createElement(item.type);
-      if(item.class) {
-        item.class.forEach(name => {
-          ele.classList.add(name);
-        })
+    append(elements);
+  };
+  const makeAnalysisContainer = () => {
+    const elements = [{
+      type: 'div',
+      name: 'filter',
+      class: ['word-filter'],
+      id: 'word-filter',
+      onclick() {
+        close(elements);
       }
-      if(item.content) {
-        ele.innerText = item.content;
-      }
-      if(item.onclick) {
-        ele.onclick = item.onclick;
-      }
-      if(item.id) {
-        ele.id = item.id;
-      }
-      if(item.columns) {
-        const tableRow = ele.insertRow(0);
-        item.columns.forEach((column, index) => {
-          const tableCell = tableRow.insertCell(index);
-          if(item.headRender) {
-            tableCell.innerHTML = item.headRender(column.text);
-          } else {
-            tableCell.innerText = column.text;
-          }
-        })
-      }
-      if(item.tableContent && item.columns) {
-        item.tableContent.forEach((content) => {
-          const tableRow = ele.insertRow(ele.rows.length);
-          if(item.onRowClick) {
-            tableRow.onclick = () => item.onRowClick(content.index);
-          }
-          item.columns.forEach((column, index) => {
-            const tableCell = tableRow.insertCell(index);
-            if(column.cellRender) {
-              tableCell.innerHTML = column.cellRender(content[column.key]);
-            } else {
-              tableCell.innerText = content[column.key];
-            }
-          })
-        })
-      }
-      return ele;
-    }
-    elements.forEach(item => {
-      const ele = attribute(item);
-      function checkChildren(father, object) {
-        if(object.children){
-          object.children.forEach(childItem => {
-            const child = attribute(childItem);
-            father.appendChild(child);
-            checkChildren(child, childItem);
-          });
-        }
-      }
-      checkChildren(ele, item);
-      document.documentElement.appendChild(ele);
-    });
+    },{
+      type: 'div',
+      name: 'analysis-container',
+      class: ['word-container'],
+      id: 'analysis-container',
+      children: [{
+        type: 'div',
+        name: 'analysis-dicType-title',
+        content: '当前词库',
+        class: ['analysis-dicType-title'],
+      },{
+        type: 'div',
+        name: 'analysis-current-dicType',
+        content: setting.dicType,
+        id: 'analysis-current-dicType',
+        class: ['analysis-current-dicType'],
+      },{
+        type: 'div',
+        name: 'analysis-total-title',
+        content: '单词总数',
+        id: 'analysis-total-title',
+        class: ['analysis-total-title'],
+      },{
+        type: 'div',
+        name: 'analysis-total-number',
+        content: setting.analysis[setting.dicType].total,
+        id: 'analysis-total-number',
+        class: ['analysis-total-number'],
+      },{
+        type: 'div',
+        name: 'analysis-recognition-title',
+        content: '认识数',
+        id: 'analysis-recognition-title',
+        class: ['analysis-recognition-title'],
+      },{
+        type: 'div',
+        name: 'analysis-recognition-number',
+        content: setting.analysis[setting.dicType].recognition,
+        id: 'analysis-recognition-number',
+        class: ['analysis-recognition-number'],
+      },{
+        type: 'div',
+        name: 'analysis-percentage-title',
+        content: '认识率',
+        id: 'analysis-percentage-title',
+        class: ['analysis-percentage-title'],
+      },{
+        type: 'div',
+        name: 'analysis-percentage-number',
+        content: setting.analysis[setting.dicType].recognition/setting.analysis[setting.dicType].total,
+        id: 'analysis-percentage-number',
+        class: ['analysis-percentage-number'],
+      },{
+        type: 'div',
+        name: 'analysis-cover-title',
+        content: '词库覆盖率',
+        id: 'analysis-cover-title',
+        class: ['analysis-cover-title'],
+      },{
+        type: 'div',
+        name: 'analysis-cover-number',
+        content: setting.analysis[setting.dicType].total/setting.analysis[setting.dicType].length,
+        id: 'analysis-cover-number',
+        class: ['analysis-cover-number'],
+      }]
+    }]
   };
   const sendMessage = (index = -1) =>{
     chrome.runtime.sendMessage({
@@ -273,13 +317,15 @@
     (message, sender, sendResponse) => {
       console.log("script on message", message, sender, sendResponse);
       if(message.popup) {
-        makeWordContainer(message.popup)
+        makeWordContainer(message.popup);
       }
       if(message.history) {
-        makeHistoryContianer()
+        makeHistoryContainer();
+      }
+      if(message.analysis) {
+        makeAnalysisContainer();
       }
       return true;
     }
   );
-  console.log(setting);
 })();

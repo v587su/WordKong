@@ -15,6 +15,12 @@ function showHistoryContainer(e) {
     chrome.tabs.sendMessage(tabs[0].id, {history: true});
   });
 }
+function showAnalysisContainer(e) {
+  _gaq.push(['_trackEvent', e.target.id, 'clicked']);
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    chrome.tabs.sendMessage(tabs[0].id, {analysis: true});
+  });
+}
 function openOptionsPage(e) {
   _gaq.push(['_trackEvent', e.target.id, 'clicked']);
   chrome.runtime.openOptionsPage();
@@ -22,6 +28,7 @@ function openOptionsPage(e) {
 (() =>{
   document.getElementById('word-still-learning').addEventListener('click', showWordContainer);
   document.getElementById('word-show-history').addEventListener('click', showHistoryContainer);
+  document.getElementById('word-show-analysis').addEventListener('click', showAnalysisContainer);
   document.getElementById('word-show-option').addEventListener('click', openOptionsPage);
   document.getElementById('word-kong-version').innerHTML = 'Version:' + defaultSetting.version;
 })();

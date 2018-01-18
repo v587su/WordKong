@@ -41,8 +41,14 @@ chrome.runtime.onMessage.addListener(
       if(nextHistory.length > 20) {
         nextHistory.pop();
       }
-      nextAnalysis[message.history.dicType] =
-      chrome.storage.sync.set({wordKong:Object.assign(setting, {history: nextHistory})});
+      if( message.history.state === '认识') {
+        nextAnalysis[message.history.dicType].recognition += 1;
+      }
+      nextAnalysis[message.history.dicType].total += 1;
+      chrome.storage.sync.set({wordKong:Object.assign(setting, {
+        history: nextHistory,
+        analysis: nextAnalysis,
+      })});
     }
     return true;
   }

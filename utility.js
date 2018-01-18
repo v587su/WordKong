@@ -5,7 +5,23 @@ const defaultSetting = {
   current: 0, //当前单词
   history: [], //单词背诵历史
   version: '0.2.1', //单词控版本
-  analysis: {}, //数据分析
+  analysis: {
+    CET6: {
+      recognition: 0,
+      total: 0,
+      length: wordArray['CET6'].length
+    },
+    CET4: {
+      recognition: 0,
+      total: 0,
+      length: wordArray['CET4'].length
+    },
+    NETEM: {
+      recognition: 0,
+      total: 0,
+      length: wordArray['NETEM'].length
+    },
+  }, //数据分析
 };
 
 const text = {
