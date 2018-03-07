@@ -9,17 +9,17 @@ const defaultSetting = {
     CET6: {
       recognition: 0,
       total: 0,
-      length: wordArray['CET6'].length
+      length: wordArray['CET6'].length,
     },
     CET4: {
       recognition: 0,
       total: 0,
-      length: wordArray['CET4'].length
+      length: wordArray['CET4'].length,
     },
     NETEM: {
       recognition: 0,
       total: 0,
-      length: wordArray['NETEM'].length
+      length: wordArray['NETEM'].length,
     },
   }, //数据分析
 };

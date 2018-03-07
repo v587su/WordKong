@@ -312,6 +312,7 @@
       makeWordContainer(response);
     });
   };
+  console.log(setting);
   sendMessage();
   chrome.runtime.onMessage.addListener(
     (message, sender, sendResponse) => {
