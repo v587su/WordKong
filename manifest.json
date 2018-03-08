@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "单词控",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "上着上着网突然蹦出个单词让你背！是不是幸福感满满？",
   "permissions": [
     "http://*.shanbay.com/*",
