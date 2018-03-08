@@ -4,7 +4,7 @@ const defaultSetting = {
   autoAudio: 0, //自动发音
   current: 0, //当前单词
   history: [], //单词背诵历史
-  version: '0.2.1', //单词控版本
+  version: '0.2.2', //单词控版本
   analysis: {
     CET6: {
       recognition: 0,
@@ -28,7 +28,7 @@ const text = {
   installWelcomeTitle: '欢迎使用单词控！',
   installWelcomeContent: '这是一个用较为诡异的方式督促你背单词的拓展！目前默认的词库是英语六级, 不要忘了去设置一下你想背的词库哟！ヾ(o◕∀◕)ﾉ',
   updateWelcomeTitle: '单词控更新啦！',
-  updateWelcomeContent: '本次更新的内容有：巴拉巴拉',
+  updateWelcomeContent: '本次更新的内容有：①增加数据统计功能，可以查看你背了多少单词哟！ ②增加了再背一次功能，想背就背更方便啦！ ③修复了一大堆bug，说了你们也不懂ヾ(o◕∀◕)ﾉ',
   updateConfirm: '这里有两种下载方式：第一种是直接下载crx格式插件，但chrome对插件的来源要求比较严格，可能会出现插件失效的情况；第二种就是科学上网到chrome的插件商店下载（没错，单词控在chrome商店上线了）。总之！想直接下载请点确定，科学上网的同学点取消！',
 };
 
