@@ -19,7 +19,7 @@ chrome.runtime.onInstalled.addListener(
 
 //监听器
 chrome.runtime.onMessage.addListener(
-  (message, sender,  sendResponse) => {
+  (message, sender,  sendResponse) =>   {
     console.log("on message", message, sender);
     //获取单词的监听器
     const check = sender.url.length < setting.frequency || sender.url.includes('chrome-extension');

@@ -115,6 +115,23 @@
     border-bottom: 1px solid #D6DADC;
 }
 
+.analysis-box {
+    border: 1px green solid;
+    border-radius: 5px;
+    background-color: #fff;
+    color: green;
+    width: 45%;
+    margin-right: 3%;
+    margin-top:5%;
+    text-align: center;
+    float: left;
+}
+.analysis-number {
+    font-size: 30px;
+    color: #07f;
+    margin:2% 0;
+}
+
 .popup-container {
     text-align: center;
 }

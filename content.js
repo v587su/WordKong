@@ -106,6 +106,7 @@
         onclick(){
           addHistory('认识');
           close(elements);
+          sendMessage();
         }
       },{
         type: 'button',
@@ -165,6 +166,15 @@
         class: ['word-button'],
         onclick() {
           close(elements);
+        }
+      },{
+        type: 'button',
+        name: 'again',
+        content: '再来一个!',
+        class: ['word-button'],
+        onclick() {
+          close(elements);
+          sendMessage();
         }
       }]
     }];
@@ -243,66 +253,108 @@
       class: ['word-container'],
       id: 'analysis-container',
       children: [{
-        type: 'div',
-        name: 'analysis-dicType-title',
-        content: '当前词库',
-        class: ['analysis-dicType-title'],
+       type: 'div',
+       name: 'analysis-box-1',
+       class: ['analysis-box'],
+       children: [{
+         type: 'div',
+         name: 'analysis-dicType-title',
+         content: '当前词库',
+         class: ['analysis-dicType-title'],
+       },{
+         type: 'div',
+         name: 'analysis-dicType-number',
+         content: setting.dicType,
+         id: 'analysis-dicType-number',
+         class: ['analysis-number'],
+       }]
       },{
         type: 'div',
-        name: 'analysis-current-dicType',
-        content: setting.dicType,
-        id: 'analysis-current-dicType',
-        class: ['analysis-current-dicType'],
+        name: 'analysis-box-2',
+        class: ['analysis-box'],
+        children: [{
+          type: 'div',
+          name: 'analysis-dicNumber-title',
+          content: '词库单词总数',
+          class: ['analysis-dicNumber-title'],
+        },{
+          type: 'div',
+          name: 'analysis-dicNumber-number',
+          content: setting.analysis[setting.dicType].length,
+          id: 'analysis-dicNumber-number',
+          class: ['analysis-number'],
+        }]
       },{
         type: 'div',
-        name: 'analysis-total-title',
-        content: '单词总数',
-        id: 'analysis-total-title',
-        class: ['analysis-total-title'],
+        name: 'analysis-box-3',
+        class: ['analysis-box'],
+        children: [{
+          type: 'div',
+          name: 'analysis-total-title',
+          content: '累计蹦出单词数',
+          id: 'analysis-total-title',
+          class: ['analysis-total-title'],
+        },{
+          type: 'div',
+          name: 'analysis-total-number',
+          content: setting.analysis[setting.dicType].total,
+          id: 'analysis-total-number',
+          class: ['analysis-number'],
+        }],
       },{
         type: 'div',
-        name: 'analysis-total-number',
-        content: setting.analysis[setting.dicType].total,
-        id: 'analysis-total-number',
-        class: ['analysis-total-number'],
+        name: 'analysis-box-4',
+        class: ['analysis-box'],
+        children: [{
+          type: 'div',
+          name: 'analysis-recognition-title',
+          content: '累计认识单词数',
+          id: 'analysis-recognition-title',
+          class: ['analysis-recognition-title'],
+        },{
+          type: 'div',
+          name: 'analysis-recognition-number',
+          content: setting.analysis[setting.dicType].recognition,
+          id: 'analysis-recognition-number',
+          class: ['analysis-number'],
+        }],
       },{
         type: 'div',
-        name: 'analysis-recognition-title',
-        content: '认识数',
-        id: 'analysis-recognition-title',
-        class: ['analysis-recognition-title'],
+        name: 'analysis-box-5',
+        class: ['analysis-box'],
+        children: [{
+          type: 'div',
+          name: 'analysis-percentage-title',
+          content: '认识率',
+          id: 'analysis-percentage-title',
+          class: ['analysis-percentage-title'],
+        },{
+          type: 'div',
+          name: 'analysis-percentage-number',
+          content: (setting.analysis[setting.dicType].recognition/setting.analysis[setting.dicType].total*100).toFixed(1) + '%',
+          id: 'analysis-percentage-number',
+          class: ['analysis-number'],
+        }],
       },{
         type: 'div',
-        name: 'analysis-recognition-number',
-        content: setting.analysis[setting.dicType].recognition,
-        id: 'analysis-recognition-number',
-        class: ['analysis-recognition-number'],
-      },{
-        type: 'div',
-        name: 'analysis-percentage-title',
-        content: '认识率',
-        id: 'analysis-percentage-title',
-        class: ['analysis-percentage-title'],
-      },{
-        type: 'div',
-        name: 'analysis-percentage-number',
-        content: setting.analysis[setting.dicType].recognition/setting.analysis[setting.dicType].total,
-        id: 'analysis-percentage-number',
-        class: ['analysis-percentage-number'],
-      },{
-        type: 'div',
-        name: 'analysis-cover-title',
-        content: '词库覆盖率',
-        id: 'analysis-cover-title',
-        class: ['analysis-cover-title'],
-      },{
-        type: 'div',
-        name: 'analysis-cover-number',
-        content: setting.analysis[setting.dicType].total/setting.analysis[setting.dicType].length,
-        id: 'analysis-cover-number',
-        class: ['analysis-cover-number'],
+        name: 'analysis-box-6',
+        class: ['analysis-box'],
+        children: [{
+          type: 'div',
+          name: 'analysis-cover-title',
+          content: '词库覆盖率',
+          id: 'analysis-cover-title',
+          class: ['analysis-cover-title'],
+        },{
+          type: 'div',
+          name: 'analysis-cover-number',
+          content: (setting.analysis[setting.dicType].total/setting.analysis[setting.dicType].length*100).toFixed(1) + '%',
+          id: 'analysis-cover-number',
+          class: ['analysis-number'],
+        }],
       }]
-    }]
+    }];
+    append(elements);
   };
   const sendMessage = (index = -1) =>{
     chrome.runtime.sendMessage({
